@@ -18,7 +18,7 @@ Go to the project directory and run the following command to initialize the pod
 
 
 Yaml file content replication.yml
-`` `
+```
 apiVersion: v1
 kind: ReplicationController
 metadata:
@@ -52,7 +52,7 @@ spec:
           - name: POSTGRES_DB
             value: WORKSHOP
 
-`` `
+```
 
 ## Solving problem 2
 
@@ -62,21 +62,21 @@ This problem is not clear due to the fact that there is no state down for pods, 
 I think that there are several ways to solve this problem.
 
 * Using the lifecycle handlers, calling a web api that sends the mail, it would be private (because it is only available in the minikuber vm and we do not need auth) 
-`` `
+```
  lifecycle:
           PreStop:
             httpGet:
               path: "/ sample / mail-failure"
               port: 8080
-`` `
+```
 * Use the exec command: we need to install a mail server inside container
-`` `
+```
 lifecycle:
       PreStop:
         exec:
           command: ["/ bin / sh", "mail", "mail@sample.com -s pod terminated"]
   
-`` `
+```
 * Using the wait function of kubectl: if the output "is condition met" run an script based on the operating system in which kubectl is running
 
 > kubectl wait --for-delete pod / postgres
@@ -86,14 +86,14 @@ lifecycle:
 The solution of the problem 3 is to build a custom docker image and publish in a repository, we need to copy our scripts in a folder.
 
 DockerFile
-`` `
+```
 FROM postgres
 # Add the content of the sql-scripts / directory to your image
 # All scripts in docker-entrypoint-initdb.d / are automatically
 # executed during container startup
 COPY ./sql-scripts/ /docker-entrypoint-initdb.d/
 
-`` `
+```
 
 
 Build the image
